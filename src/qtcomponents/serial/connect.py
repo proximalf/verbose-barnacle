@@ -62,8 +62,8 @@ class SerialConnectionWidget(QWidget):
         """
         self._connected_flag = connected
         self.connect_button.setText("Connect" if not connected else "Disconnect")
+        self.update_status("Connected!" if connected else "Not Connected!")
         self.port_cbox.setEnabled(not connected)
-        self.connect_button.setEnabled(not connected)
 
     def emit_connection_request(self) -> None:
         self.signal_connection_requested.emit(
