@@ -461,9 +461,9 @@ wheels = [
 ]
 
 [[package]]
-name = "qt-components"
-version = "0.1.0"
-source = { virtual = "." }
+name = "qtcomponents"
+version = "0.1.5"
+source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
     { name = "pyserial" },
