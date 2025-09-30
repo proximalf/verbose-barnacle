@@ -1,2 +1,2 @@
-from .connect import SerialConnectionWidget
 from .command import CommandEntryWidget
+from .connect import SerialConnectionWidget
