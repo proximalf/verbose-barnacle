@@ -3,7 +3,7 @@ import logging
 from PySide6.QtWidgets import QTextEdit, QVBoxLayout, QWidget
 
 
-class LoggingComponent(QWidget):
+class LoggingWidget(QWidget):
     """
     Inherits QWidget.
     """
@@ -20,18 +20,18 @@ class LoggingComponent(QWidget):
         self.text_box.append(msg)
 
 
-class LoggingComponentHandler(logging.Handler):
+class LoggingHandler(logging.Handler):
     """
     Inherits logging.Handler.
     Logging handler that sends the log results to a given window
     """
 
-    def __init__(self, edit: LoggingComponent, level: int | str = logging.WARNING) -> None:
+    def __init__(self, edit: LoggingWidget, level: int | str = logging.WARNING) -> None:
         """
         A log handler that outputs messages to a provided QTextEdit.
         """
-        super().__init__()
-        self.edit: LoggingComponent = edit
+        super().__init__(level=level)
+        self.edit: LoggingWidget = edit
         self.setLevel(level)
         self.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s - %(message)s", datefmt="%H:%M:%S"))
 
@@ -46,3 +46,12 @@ class LoggingComponentHandler(logging.Handler):
 
         """
         self.edit.append(self.format(record))
+
+
+class LoggingComponent:
+    def __init__(self, parent: QWidget, level: int | str = logging.WARNING) -> None:
+        """
+        A log handler that outputs messages to a provided QTextEdit.
+        """
+        self.widget: LoggingWidget = LoggingWidget(parent)
+        self.handler = LoggingHandler(self.widget, level)
