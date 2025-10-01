@@ -1,6 +1,6 @@
 [project]
 name = "qtcomponents"
-version = "0.1.5"
+version = "0.2.0"
 description = "Common component library for PySide6"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -18,3 +18,19 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 sources = ["src"]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=6.0.1",
+]
+
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+honor_noqa = true
+color_output = true
+src_paths = ["src"]

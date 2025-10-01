@@ -1,8 +1,16 @@
 from typing import List
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton,
-                               QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QComboBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSpacerItem,
+    QSpinBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class SerialConnectionWidget(QWidget):
@@ -35,7 +43,7 @@ class SerialConnectionWidget(QWidget):
 
         self.connection_layout.addWidget(self.connect_button)
         self.connection_layout.addWidget(self.port_cbox)
-        
+
         self.horizontalLayout.addLayout(self.connection_layout)
         self.horizontalLayout.addWidget(self.label)
 

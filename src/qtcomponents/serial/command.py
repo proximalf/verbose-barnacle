@@ -1,6 +1,12 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import (QHBoxLayout, QLineEdit, QTextEdit,
-                               QPushButton, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLineEdit,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class CommandEntryWidget(QWidget):
@@ -36,7 +42,6 @@ class CommandEntryWidget(QWidget):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.send_button.clicked.connect(self.send_command_entry)
-
 
     def send_command_entry(self) -> None:
         """
