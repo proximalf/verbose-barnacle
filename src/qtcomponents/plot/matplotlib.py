@@ -39,15 +39,16 @@ class MatplotlibWidget(QWidget):
         self.dpi = dpi
         self._figure: Optional[Figure] = None
         self.vbox = QVBoxLayout()
+        self.setLayout(self.vbox)
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(0)
-        self.setLayout(self.vbox)
+        
+        self.canvas = FigureCanvas()
 
         if toolbar:
             self.toolbar = NavigationToolbar(self.canvas, self)
             self.vbox.addWidget(self.toolbar)
 
-        self.canvas = FigureCanvas()
         self.vbox.addWidget(self.canvas)
 
     @property
