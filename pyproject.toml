@@ -1,13 +1,12 @@
 [project]
 name = "qtcomponents"
-version = "0.2.0"
+version = "0.3.2"
 description = "Common component library for PySide6"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [{name = "proximalf", email = "proximalfuture@gmail.com"}]
 dependencies = [
     "matplotlib>=3.10.6",
-    "pyserial>=3.5",
     "pyside6>=6.9.2",
 ]
 license = {text = "MIT"}
@@ -18,3 +17,19 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 sources = ["src"]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=6.0.1",
+]
+
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+honor_noqa = true
+color_output = true
+src_paths = ["src"]

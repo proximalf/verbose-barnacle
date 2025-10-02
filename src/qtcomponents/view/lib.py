@@ -33,20 +33,14 @@ def numpy_to_pixmap(array: np.ndarray) -> QPixmap:
 
     if depth == 2:  # Grayscale
         height, width = array.shape
-        image = QImage(
-            array.data, width, height, width, QImage.Format.Format_Grayscale8
-        )
+        image = QImage(array.data, width, height, width, QImage.Format.Format_Grayscale8)
     elif depth > 2:
         height, width, channels = array.shape
 
         if channels == 3:  # RGB
-            image = QImage(
-                array.data, width, height, 3 * width, QImage.Format.Format_RGB888
-            )
+            image = QImage(array.data, width, height, 3 * width, QImage.Format.Format_RGB888)
         elif channels == 4:  # RGBA
-            image = QImage(
-                array.data, width, height, 4 * width, QImage.Format.Format_RGBA8888
-            )
+            image = QImage(array.data, width, height, 4 * width, QImage.Format.Format_RGBA8888)
         else:
             raise TypeError(f"Unsupported number of channels: {channels}")
 
@@ -96,9 +90,7 @@ def clamp_point_to_item(point: QPoint, item: QGraphicsItem) -> QPoint:
     return QPoint(x, y)
 
 
-def aboslute_scene_size(
-    scene: QGraphicsScene, transform: QTransform
-) -> Tuple[float, float]:
+def aboslute_scene_size(scene: QGraphicsScene, transform: QTransform) -> Tuple[float, float]:
     """
     Calculate the absolute size of the scene, this takes into account any scale transforms.
 

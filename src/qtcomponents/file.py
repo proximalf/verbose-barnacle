@@ -1,8 +1,20 @@
+from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from PySide6.QtWidgets import QFileDialog, QWidget
 
+def convert_filter_to_qt(filter: Optional[Dict[str, str]] = None,) -> Tuple[List[str], str]:
+    """
+    Converts a filter dict into something Qt can use.
+    """
+    # As the Dialog will return the selected filter, use this as the key to return the correctly formatted suffix
+    # EG: "Bitmap (*.bmp);; JPEG (*.jpg);; PNG (*.png);; Tagged Image File Format (*.tiff)"
+    filter_list = [key for key in filter.keys()] if filter is not None else []
+
+    # QT Expects a string seperated by `;; `
+    filter_string = ";; ".join(filter_list)
+    return filter_list, filter_string
 
 class FileDialog:
     """
@@ -12,7 +24,7 @@ class FileDialog:
         parent: QWidget, `self`
         directory: Path, `./path/to/directory`
         caption: str,
-        filter: str, `*.file`
+        ...
 
     Parameters
     ----------
@@ -22,9 +34,18 @@ class FileDialog:
         Directory to open the FileDialog into.
     caption: Optional[str]
         Caption to give the file dialog
-    filter: Optional[str]
-        Set a filter to force a filetype.
-        eg = `filter="CSV (*.csv);; JPEG (*.jpg);; PNG (*.png);; Tagged Image File Format (*.tiff)"`
+    filter: Optional[Dict[str, str]]
+        Set a filter to force a filetype. Always assumes the first entry is the choosen filter.
+
+    Filter
+    ----------
+    filepath = FileDialog.save(
+        ...,
+        filter={
+            "Bitmap (*.bmp)": ".bmp",
+        },
+    )
+
     """
 
     @staticmethod
@@ -32,7 +53,7 @@ class FileDialog:
         parent: Optional[QWidget] = None,
         directory: Optional[Path] = None,
         caption: str = "Open File",
-        filter: Optional[str] = None,
+        filter: Optional[Dict[str, str]] = None,
     ) -> Optional[Path]:
         """
         Opens a file dialog window, and returns a selected Path.
@@ -43,11 +64,14 @@ class FileDialog:
         path: Optional[Path]
             If path selected, else None.
         """
+        filter_list, filter_string = convert_filter_to_qt(filter)
+
         qfilepath, _ = QFileDialog.getOpenFileName(
             parent=parent,
             caption=caption,
-            dir=str(directory),
-            filter=filter if filter else "",
+            dir=str(directory) if directory is not None else "",
+            filter=filter_string,
+            selectedFilter=filter_list[0] if filter is not None else "",
         )
 
         # Do nothing if no file selected.
@@ -61,7 +85,7 @@ class FileDialog:
         parent: Optional[QWidget] = None,
         directory: Optional[Path] = None,
         caption: str = "Open Files",
-        filter: Optional[str] = None,
+        filter: Optional[Dict[str, str]] = None,
     ) -> Optional[List[Path]]:
         """
         Same as open, but for multiple filepaths. Returning all filepaths as a list, even if only one is selected.
@@ -72,11 +96,14 @@ class FileDialog:
         paths: Optional[List[Path]]
             If path selected, else None. Will return, Path or List of Paths.
         """
+        filter_list, filter_string = convert_filter_to_qt(filter)
+
         qfilepaths, _ = QFileDialog.getOpenFileNames(
             parent=parent,
             caption=caption,
-            dir=str(directory),
-            filter=filter if filter else "",
+            dir=str(directory) if directory is not None else "",
+            filter=filter_string,
+            selectedFilter=filter_list[0] if filter is not None else "",
         )
 
         # Do nothing if no file selected.
@@ -102,27 +129,12 @@ class FileDialog:
 
         Set append_suffix to auto append the choosen suffix
 
-        Filter
-        ----------
-        filepath = FileDialog.save(
-            ...,
-            filter={
-                "Bitmap (*.bmp)": ".bmp",
-            },
-        )
-
-
         Returns
         ----------
         path: Optional[Path]
             If path selected, else None.
         """
-        # As the Dialog will return the selected filter, use this as the key to return the correctly formatted suffix
-        # EG: "Bitmap (*.bmp);; JPEG (*.jpg);; PNG (*.png);; Tagged Image File Format (*.tiff)"
-        filter_list = [key for key in filter.keys()] if filter is not None else []
-
-        # QT Expects a string seperated by `;; `
-        filter_string = ";; ".join(filter_list)
+        filter_list, filter_string = convert_filter_to_qt(filter)
 
         qfilepath, selected_filter = QFileDialog.getSaveFileName(
             parent=parent,

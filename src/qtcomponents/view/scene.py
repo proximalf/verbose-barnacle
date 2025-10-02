@@ -19,13 +19,9 @@ class ImageViewerScene(QGraphicsScene):
 
         # Generate Layers
         # Mock layer effect.
-        self._layers: Dict[SceneLayer, List[QGraphicsItem]] = {
-            layer: [] for layer in SceneLayer
-        }
+        self._layers: Dict[SceneLayer, List[QGraphicsItem]] = {layer: [] for layer in SceneLayer}
 
-    def add_item(
-        self, item: QGraphicsItem, layer: SceneLayer = SceneLayer.Foreground
-    ) -> None:
+    def add_item(self, item: QGraphicsItem, layer: SceneLayer = SceneLayer.Foreground) -> None:
         """
         Add a graphics item to scene, and set the Z value.
         """

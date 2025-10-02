@@ -36,9 +36,7 @@ class ImageViewer(QGraphicsView):
         self.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
 
-    def absolute_scene_scale_ratio_of_viewport(
-        self, adjustment_ratio: float = 1.0
-    ) -> Tuple[float, float]:
+    def absolute_scene_scale_ratio_of_viewport(self, adjustment_ratio: float = 1.0) -> Tuple[float, float]:
         return absolute_scene_scale_ratio_of_viewport(
             scene=self.scene(),
             transform=self.transform(),
@@ -51,9 +49,7 @@ class ImageViewer(QGraphicsView):
         Reset the view to the current largest items bounding rect.
         If there are no items the method call is ignored.
         """
-        self.fitInView(
-            self.scene().sceneRect(), aspectRadioMode=Qt.AspectRatioMode.KeepAspectRatio
-        )
+        self.fitInView(self.scene().sceneRect(), aspectRadioMode=Qt.AspectRatioMode.KeepAspectRatio)
 
     def zoom(self, direction: int, rate: float = DELTA_SCALE) -> None:
         """

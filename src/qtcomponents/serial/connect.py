@@ -1,8 +1,16 @@
 from typing import List
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton,
-                               QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (
+    QComboBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSpacerItem,
+    QSpinBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class SerialConnectionWidget(QWidget):
@@ -22,10 +30,7 @@ class SerialConnectionWidget(QWidget):
         super().__init__(parent=parent, *args, **kwargs)
         self._connected_flag = False
 
-        self.horizontalLayout = QHBoxLayout(self)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-
-        self.connection_layout = QVBoxLayout()
+        self.connection_layout = QHBoxLayout(self)
         self.connection_layout.setContentsMargins(0, 0, 0, 0)
 
         self.connect_button = QPushButton(self)
@@ -33,11 +38,9 @@ class SerialConnectionWidget(QWidget):
 
         self.label = QLabel(self)
 
-        self.connection_layout.addWidget(self.connect_button)
+        self.connection_layout.addWidget(self.label)
         self.connection_layout.addWidget(self.port_cbox)
-        
-        self.horizontalLayout.addLayout(self.connection_layout)
-        self.horizontalLayout.addWidget(self.label)
+        self.connection_layout.addWidget(self.connect_button)
 
         self.connect_button.clicked.connect(self.emit_connection_request)
         self.connect_button.setText("Connect")
