@@ -1,1 +1,3 @@
-from . import file, log, plot, serial
+from . import log, serial
+from .file import FileDialog
+from .plot import MatplotlibWidget
