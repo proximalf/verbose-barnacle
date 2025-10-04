@@ -34,7 +34,7 @@ class MatplotlibWidget(QWidget):
     plot_widget.draw()
     """
 
-    def __init__(self, parent=None, toolbar: bool = True, dpi=100, *args, **kwargs) -> None:
+    def __init__(self, parent: QWidget = None, toolbar: bool = True, dpi=100, *args, **kwargs) -> None:
         super().__init__(parent=parent, *args, **kwargs)
         self.dpi = dpi
         self._figure: Optional[Figure] = None
