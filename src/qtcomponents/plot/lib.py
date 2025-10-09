@@ -10,9 +10,9 @@ def save_figure_fixed_size(path: Path, figure: Figure, width: float = 8.3, heigh
     """
     original_size = figure.get_size_inches() # get original size
 
-    figure.tight_layout()
-    
     figure.set_size_inches(width, height) # set fixed size in inches
+    
+    figure.tight_layout() # set to tight after resizing
     
     figure.savefig(path, dpi=dpi, bbox_inches='tight')
 
