@@ -1,6 +1,6 @@
 [project]
 name = "qtcomponents"
-version = "0.2.4"
+version = "0.2.5"
 description = "Common component library for PySide6"
 readme = "README.md"
 requires-python = ">=3.12"

@@ -42,7 +42,7 @@ class MatplotlibWidget(QWidget):
         self.setLayout(self.vbox)
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(0)
-        
+
         self.canvas = FigureCanvas()
 
         if toolbar:
@@ -78,3 +78,13 @@ class MatplotlibWidget(QWidget):
             raise Exception("Cannot save if there is no figure.")
         # Setting the bbox to tight recalculates dimensions, removing the whitespace padding from being a widget.
         self.figure.savefig(path, format=file_format, bbox_inches="tight", dpi="figure" if dpi is None else dpi)
+
+    def resizeEvent(self, *args, **kwargs) -> None:
+        """
+        When the canvas resizes redraw the plot.
+        """
+        super().resizeEvent(*args, **kwargs)
+        if self.figure is None:
+            return
+        self.figure.tight_layout()
+        self.canvas.draw()
