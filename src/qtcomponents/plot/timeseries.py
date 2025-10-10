@@ -2,14 +2,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional, Tuple
 
+import numpy as np
 from matplotlib import ticker
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 from PySide6.QtWidgets import QWidget
-import numpy as np
 
 from qtcomponents.plot import MatplotlibWidget
+
 from .lib import convert_timestamp_to_string, find_plot_limits
+
 
 class TimeSeriesPlotComponent:
     """
@@ -24,13 +26,13 @@ class TimeSeriesPlotComponent:
     def __init__(self, parent: QWidget) -> None:
         self.widget = MatplotlibWidget(parent)
         self.start_time: Optional[datetime] = None
-        
-        self._resize_plot = False # this gets set to true when the timestamps need realigning.
+
+        self._resize_plot = False  # this gets set to true when the timestamps need realigning.
         self._update_plot_limits = False
 
         self.timestamps: List[float] = []
         self.data: List[float] = []
-        
+
         self.initialise_plot()
 
     def initialise_plot(self) -> None:
@@ -47,31 +49,31 @@ class TimeSeriesPlotComponent:
         self.data_line = Line2D([0], [0])
 
         self.axes.add_line(self.data_line)
-        
+
         formatter = ticker.FuncFormatter(self.format_time_ticks)
         self.axes.xaxis.set_major_formatter(formatter)
 
         figure.tight_layout()
         self.draw()
-    
+
     def format_time_ticks(self, x: float, pos: int) -> str:
         """
         Format the timestamp into a string for display on the x axis.
         """
         if self.start_time and self._update_plot_limits and pos != 0:
             return convert_timestamp_to_string(x)
-        
+
         if self.start_time and pos == 0:
             # The first position will be the start time.
             return self.start_time.strftime("%H:%M:%S")
-        
+
         return ""
 
     def update_plot(self, data: float) -> None:
         """
         Update the plotting lines.
 
-        new_data: 
+        new_data:
 
         """
         now = datetime.now()
@@ -89,21 +91,21 @@ class TimeSeriesPlotComponent:
         self.update_plot_limits()
 
         self.draw()
-   
+
     def update_plot_limits(self) -> None:
         """
         If there isn't enough stored data points, the the plot will not be updated.
         """
         if not self._update_plot_limits:
-            # Just want to calculate the lengths of arrays if there is not enough data, 
+            # Just want to calculate the lengths of arrays if there is not enough data,
             # otherwise it is okay to assume there is enough points to set the limits.
-            if (len(self.timestamps) > 2 and len(self.data) > 2):
+            if len(self.timestamps) > 2 and len(self.data) > 2:
                 self._update_plot_limits = True
 
         if self._update_plot_limits:
             x_lims = self.timestamps[0], self.timestamps[-1]
             self.axes.set_xlim(*x_lims)
-        
+
             self.axes.set_ylim(find_plot_limits(self.data))
 
     def draw(self) -> None:

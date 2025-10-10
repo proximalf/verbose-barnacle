@@ -4,7 +4,10 @@ from typing import Dict, List, Optional, Tuple
 
 from PySide6.QtWidgets import QFileDialog, QWidget
 
-def convert_filter_to_qt(filter: Optional[Dict[str, str]] = None,) -> Tuple[List[str], str]:
+
+def convert_filter_to_qt(
+    filter: Optional[Dict[str, str]] = None,
+) -> Tuple[List[str], str]:
     """
     Converts a filter dict into something Qt can use.
     """
@@ -15,6 +18,7 @@ def convert_filter_to_qt(filter: Optional[Dict[str, str]] = None,) -> Tuple[List
     # QT Expects a string seperated by `;; `
     filter_string = ";; ".join(filter_list)
     return filter_list, filter_string
+
 
 class FileDialog:
     """

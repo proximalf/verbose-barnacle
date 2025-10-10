@@ -98,4 +98,3 @@ class MatplotlibWidget(QWidget):
             return
         self.figure.tight_layout()
         self.canvas.draw()
-

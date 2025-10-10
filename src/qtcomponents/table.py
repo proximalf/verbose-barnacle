@@ -19,7 +19,7 @@ class StructuredArrayModel(QAbstractTableModel):
     def __init__(self, array: np.ndarray) -> None:
         super().__init__()
         self._array = array
-        self._field_names: List[str] = array.dtype.names # type: ignore
+        self._field_names: List[str] = array.dtype.names  # type: ignore
         self._data_alignment = Qt.AlignmentFlag.AlignCenter
 
     def rowCount(self, *args, **kwargs) -> int:
