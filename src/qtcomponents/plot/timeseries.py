@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QWidget
 import numpy as np
 
 from qtcomponents.plot import MatplotlibWidget
-from .lib import find_plot_limits
+from .lib import convert_timestamp_to_string, find_plot_limits
 
 class TimeSeriesPlotComponent:
     """
@@ -59,25 +59,12 @@ class TimeSeriesPlotComponent:
         Format the timestamp into a string for display on the x axis.
         """
         if self.start_time and self._update_plot_limits and pos != 0:
-
-            d = datetime.fromtimestamp(x, tz=timezone.utc)
-
-            if d.day > 1:
-                return d.strftime("%d %H:%M:%S")
-
-            if d.hour > 0:
-                return d.strftime("%H:%M:%S")
-
-            if d.minute > 0:
-                return d.strftime("%M:%S")
-
-            if d.second > 0:
-                return d.strftime("%S")
-
-            return d.strftime("%S")
-
+            return convert_timestamp_to_string(x)
+        
         if self.start_time and pos == 0:
+            # The first position will be the start time.
             return self.start_time.strftime("%H:%M:%S")
+        
         return ""
 
     def update_plot(self, data: float) -> None:
@@ -133,32 +120,3 @@ class TimeSeriesPlotComponent:
         self.timestamps = []
         self.start_time = None
         self.draw()
-
-def run_once(f):
-    """
-    Decorator for only running a function once.
-    """
-    def wrapper(*args, **kwargs):
-        if not wrapper.has_run:
-            wrapper.has_run = True
-            return f(*args, **kwargs)
-    wrapper.has_run = False
-    return wrapper
-
-
-def format_timestamp_into_timestring(timestamp: float) -> str:
-    d = datetime.fromtimestamp(timestamp, tz=timezone.utc)
-
-    if d.day > 1:
-        return d.strftime("%d %H:%M:%S")
-
-    if d.hour > 0:
-        return d.strftime("%H:%M:%S")
-
-    if d.minute > 0:
-        return d.strftime("%M:%S")
-
-    if d.second > 0:
-        return d.strftime("%S").lstrip("0") # silly but strips the leading zero.
-    
-    return ""
