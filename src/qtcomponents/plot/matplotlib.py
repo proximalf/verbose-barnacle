@@ -88,3 +88,14 @@ class MatplotlibWidget(QWidget):
             return
         self.figure.tight_layout()
         self.canvas.draw()
+
+    def showEvent(self, *args, **kwargs) -> None:
+        """
+        When the canvas shows redraw the plot.
+        """
+        super().showEvent(*args, **kwargs)
+        if self.figure is None:
+            return
+        self.figure.tight_layout()
+        self.canvas.draw()
+
