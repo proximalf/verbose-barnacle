@@ -74,7 +74,10 @@ Two widgets for serial connections. `SerialConnectionWidget` and `SerialCommandW
 ### Log
 `LoggingComponent` holds reference to a logging handler that emits its messages to a text edit widget. Remember to attach handler to internal logging, and to insert the widget into what ever parent.
 
+### ImageViewComponent
+Relatively simple image view widget using a QGraphicsView. Accepts a numpy array, has to be integer dtype.
 
-## Function
+## Functions
+
 ### `show_error_dialog`
 This will spawn a simple error dialog with some traceback info, if an exception is passed.
