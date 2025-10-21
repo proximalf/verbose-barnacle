@@ -1,11 +1,10 @@
 from typing import Optional, Tuple
+
 from PySide6.QtCore import QPointF, Qt, Signal
-from PySide6.QtGui import QKeyEvent
-from PySide6.QtGui import QMouseEvent, QWheelEvent, QPainter, QCursor
+from PySide6.QtGui import QCursor, QKeyEvent, QMouseEvent, QPainter, QWheelEvent
 from PySide6.QtWidgets import QGraphicsView
 
 from .lib import absolute_scene_scale_ratio_of_viewport
-
 
 DELTA_SCALE = 0.05  # Rate of change x% an update
 MAX_ZOOM_IN_RATIO = 40  # 40x zoom
@@ -37,6 +36,9 @@ class ImageViewer(QGraphicsView):
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
 
     def absolute_scene_scale_ratio_of_viewport(self, adjustment_ratio: float = 1.0) -> Tuple[float, float]:
+        """
+        Returns the absolute scale of the the scene with respect to the viewport.
+        """
         return absolute_scene_scale_ratio_of_viewport(
             scene=self.scene(),
             transform=self.transform(),
@@ -113,6 +115,9 @@ class ImageViewer(QGraphicsView):
             self.signal_mouse_position.emit(scene_position)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
+        """
+        Emits key presses as a signal.
+        """
         self.signal_key_pressed.emit(event)
         return super().keyPressEvent(event)
 

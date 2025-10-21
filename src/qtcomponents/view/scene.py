@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import Dict, List, Optional
-from PySide6.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsRectItem
-from PySide6.QtGui import QBrush, QPen, QColor
+from typing import Dict, List
+
+from PySide6.QtGui import QColor, QPen
+from PySide6.QtWidgets import QGraphicsItem, QGraphicsRectItem, QGraphicsScene
 
 
 class SceneLayer(Enum):
@@ -16,8 +17,6 @@ class ImageViewerScene(QGraphicsScene):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-
-        # Generate Layers
         # Mock layer effect.
         self._layers: Dict[SceneLayer, List[QGraphicsItem]] = {layer: [] for layer in SceneLayer}
 
@@ -36,6 +35,9 @@ class ImageViewerScene(QGraphicsScene):
             item.setVisible(state)
 
     def debug(self):
+        """
+        Draws a box surrounding the sceneRect for debugging.
+        """
         rect = QGraphicsRectItem(self.sceneRect())
         pen = QPen(QColor("red"))
         pen.setWidth(2)

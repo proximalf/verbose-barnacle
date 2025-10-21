@@ -1,9 +1,11 @@
-from typing import Optional, Tuple
+from __future__ import annotations
 
+from typing import Optional
+
+from numpy import ndarray
 from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGraphicsPixmapItem
-from numpy import ndarray
 
 from .lib import numpy_to_pixmap
 
@@ -61,12 +63,12 @@ class ImageItem(QGraphicsPixmapItem):
         """
         return self.is_image_set() and self.isUnderMouse()
 
-
-def pixmap_from_numpy(image: Image) -> ImageItem:
-    """
-    Convert a numpy array image into a pixmap image for use in Qt Widgets.
-    Returns an element that can be inserted into a Qt scene.
-    """
-    pixmap = ImageItem()
-    pixmap.update_image(image)
-    return pixmap
+    @staticmethod
+    def from_numpy(image: Image) -> ImageItem:
+        """
+        Convert a numpy array image into a pixmap image for use in Qt Widgets.
+        Returns an element that can be inserted into a Qt scene.
+        """
+        pixmap = ImageItem()
+        pixmap.update_image(image)
+        return pixmap

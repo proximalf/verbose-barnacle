@@ -1,20 +1,20 @@
 from enum import Enum
 from typing import Optional
+
 from PySide6.QtCore import QPointF
 from PySide6.QtWidgets import QWidget
 
 from .graphicsview import ImageViewer
+from .image import Image, ImageItem
 from .scene import ImageViewerScene, SceneLayer
-from .image import Image, pixmap_from_numpy
 
 
 class ImageViewComponent:
     """
     Image Viewer Component, holds reference to the encompassing widget and scene.
-    Instantiates some tools
     """
 
-    def __init__(self, parent: Optional[QWidget] = None, *args, **kwargs) -> None:
+    def __init__(self, parent: Optional[QWidget] = None) -> None:
         self._raw_image: Optional[Image] = None
 
         self.viewer = ImageViewer(parent=parent)
@@ -30,7 +30,7 @@ class ImageViewComponent:
         Sets the displayed image. Stores the image for reference for displaying intensity values.
         """
         self._raw_image = image
-        pixmap = pixmap_from_numpy(image)
+        pixmap = ImageItem.from_numpy(image)
         self.scene.add_item(pixmap, layer=SceneLayer.Image)
         w, h = pixmap.boundingRect().bottomRight().toTuple()  # type: ignore
         self.scene.setSceneRect(0, 0, w, h)
