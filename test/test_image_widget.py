@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
 
-from .lib import test_widget, test_image
+from test.lib import test_widget, test_image
 
 from qtcomponents.view import ImageViewComponent
 

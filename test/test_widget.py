@@ -25,7 +25,7 @@ def main():
     if len(sys.argv) != 2:
         raise SystemExit(
             "Instances the widget directly."
-            "Usage: uv run python test_widget.py qtcomponents.table:DataTable"
+            "Usage: uv run -m test_widget qtcomponents.table:DataTable"
         )
 
     args = sys.argv[1]
