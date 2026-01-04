@@ -24,6 +24,8 @@ dev = [
     "isort>=6.0.1",
 ]
 
+[project.scripts]
+qtcomponent = "qtcomponents:execute.main"
 
 [tool.black]
 line-length = 120
