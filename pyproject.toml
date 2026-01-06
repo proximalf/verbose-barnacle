@@ -11,6 +11,11 @@ dependencies = [
 ]
 license = {text = "MIT"}
 
+[project.optional-dependencies]
+cli = [
+    "click>=8.3.0"
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
