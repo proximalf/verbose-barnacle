@@ -18,7 +18,8 @@ from .lib import find_project_root, load_widget_as_entrypoint, resolve_enum, loa
 @click.option("-w", "--widget", "widget_path", default=None)
 @click.option("-e", "--enum", "enum_path", default=None)
 @click.option("-R", "--raise", "raise_on_error", default=False, is_flag=True)
-def main(widget_path: str | None, enum_path: str | None, raise_on_error: bool = False) -> None:
+@click.option("-D", "--default", "default_behaviour", default=False, is_flag=True)
+def main(widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False) -> None:
     """
     A cli interface for executing a given QWidget from an entry point, or object returns a widget.
 
@@ -59,7 +60,7 @@ def main(widget_path: str | None, enum_path: str | None, raise_on_error: bool = 
 
     plugin = load_function_entry_point()
 
-    if plugin is None:
+    if plugin is None or default_behaviour:
         default(widget_path, entry, enum)
         return
 
