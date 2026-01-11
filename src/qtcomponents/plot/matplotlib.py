@@ -34,8 +34,8 @@ class MatplotlibWidget(QWidget):
     plot_widget.draw()
     """
 
-    def __init__(self, parent: QWidget = None, toolbar: bool = True, dpi=100, *args, **kwargs) -> None:
-        super().__init__(parent=parent, *args, **kwargs)
+    def __init__(self, parent: QWidget | None = None, toolbar: bool = True, dpi=100, *args, **kwargs) -> None:
+        super().__init__(parent, *args, **kwargs)
         self.dpi = dpi
         self._figure: Optional[Figure] = None
         self.vbox = QVBoxLayout()
@@ -52,12 +52,14 @@ class MatplotlibWidget(QWidget):
         self.vbox.addWidget(self.canvas)
 
     @property
-    def figure(self) -> Optional[Figure]:
+    def figure(self) -> Figure:
+        if self._figure is None:
+            return self.add_figure()
         return self._figure
 
     @figure.setter
     def figure(self, figure: Figure) -> None:
-        self._figure = figure
+        self._figure: Figure = figure
         figure.set_canvas(self.canvas)
         self.canvas.figure = self._figure
 

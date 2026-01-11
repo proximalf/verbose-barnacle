@@ -7,7 +7,7 @@ from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGraphicsPixmapItem
 
-from .lib import numpy_to_pixmap
+from pennyio.qt import image_to_pixmap
 
 Image = ndarray
 
@@ -44,7 +44,7 @@ class ImageItem(QGraphicsPixmapItem):
         """
         if not isinstance(image, QPixmap):
             self.set_raw_image(image)
-            image = numpy_to_pixmap(image)
+            image = image_to_pixmap(image)
 
         self.setPixmap(image)
 

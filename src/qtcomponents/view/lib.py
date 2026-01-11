@@ -5,52 +5,6 @@ from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QImage, QPixmap, QTransform
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsScene, QWidget
 
-
-def numpy_to_pixmap(array: np.ndarray) -> QPixmap:
-    """
-    Converts a NumPy array to a QPixmap.
-    The array should be in the format (height, width, channels).
-    For grayscale, it should be (height, width).
-
-    QImage unfortunately only accepts int types, values between 0-255 as RGB.
-    If you encounter a scrambled image on load, check it's values.
-
-    Parameters
-    ----------
-    array: ndarray
-        Must be a uint array.
-
-    Returns
-    ----------
-    image: QPixmap
-        Image as a QPixmap to display within a qt application.
-    """
-    if not np.issubdtype(array.dtype, np.integer):
-        raise TypeError(f"Unsupported array dtype: {array.dtype}")
-
-    # Check if the array is grayscale (2D) or color (3D)
-    depth = len(array.shape)
-
-    if depth == 2:  # Grayscale
-        height, width = array.shape
-        image = QImage(array.data, width, height, width, QImage.Format.Format_Grayscale8)
-    elif depth > 2:
-        height, width, channels = array.shape
-
-        if channels == 3:  # RGB
-            image = QImage(array.data, width, height, 3 * width, QImage.Format.Format_RGB888)
-        elif channels == 4:  # RGBA
-            image = QImage(array.data, width, height, 4 * width, QImage.Format.Format_RGBA8888)
-        else:
-            raise TypeError(f"Unsupported number of channels: {channels}")
-
-    else:
-        raise TypeError(f"Unsupported array shape: {array.shape}")
-
-    pixmap = QPixmap.fromImage(image, Qt.ImageConversionFlag.ColorOnly)
-    return pixmap
-
-
 def pythagoran_view_ratio(scene: QGraphicsScene, viewport: QWidget) -> float:
     """
     Calculates the pythagoran of a scene and viewport sizes, returning a ratio of from their respective sizes.

@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 authors = [{name = "proximalf", email = "proximalfuture@gmail.com"}]
 dependencies = [
     "matplotlib>=3.10.6",
+    "pennyio>=0.2.7",
     "pyside6>=6.9.2",
 ]
 license = {text = "MIT"}
@@ -32,6 +33,7 @@ dev = [
 [project.scripts]
 qtcomponent = "qtcomponents:execute.main"
 
+
 [tool.black]
 line-length = 120
 
@@ -40,3 +42,6 @@ profile = "black"
 honor_noqa = true
 color_output = true
 src_paths = ["src"]
+
+[tool.uv.sources]
+pennyio = { git = "https://github.com/proximalf/roasted-garlic" }
