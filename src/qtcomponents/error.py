@@ -1,5 +1,6 @@
 import traceback
 from typing import Optional
+
 from PySide6.QtWidgets import QMessageBox, QWidget
 
 
@@ -12,11 +13,11 @@ def show_error_dialog(message: str, exception: Optional[Exception] = None, paren
     dialog.setWindowTitle("Error")
     dialog.setText("An error has occurred.")
     dialog.setInformativeText(message)
-    
+
     if exception is not None:
         details = traceback.format_exc()
         dialog.setDetailedText(details)
-    
+
     dialog.setStandardButtons(QMessageBox.StandardButton.Ok)
     dialog.adjustSize()
     dialog.exec()

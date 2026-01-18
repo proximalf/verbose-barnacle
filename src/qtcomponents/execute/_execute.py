@@ -12,14 +12,22 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QWidget
 
-from .lib import find_project_root, load_widget_as_entrypoint, resolve_enum, load_function_entry_point
+from .lib import (
+    find_project_root,
+    load_function_entry_point,
+    load_widget_as_entrypoint,
+    resolve_enum,
+)
+
 
 @click.command()
 @click.option("-w", "--widget", "widget_path", default=None)
 @click.option("-e", "--enum", "enum_path", default=None)
 @click.option("-R", "--raise", "raise_on_error", default=False, is_flag=True)
 @click.option("-D", "--default", "default_behaviour", default=False, is_flag=True)
-def main(widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False) -> None:
+def main(
+    widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False
+) -> None:
     """
     A cli interface for executing a given QWidget from an entry point, or object returns a widget.
 
@@ -84,12 +92,12 @@ def default(widget_path: str, entry: Callable[..., QWidget], enum: Enum | None) 
         widget: QWidget = entry() if enum is None else entry(enum)
         if widget is None:
             echo(f"Returned value was None.")
-            return 
+            return
         widget.show()
     except:
         echo(f"Failed to run widget - {widget_path}")
         raise
-        
+
     exit_code = QT_APP.exec()
     sys.exit(exit_code)
 

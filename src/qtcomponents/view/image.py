@@ -3,11 +3,10 @@ from __future__ import annotations
 from typing import Optional
 
 from numpy import ndarray
+from pennyio.qt import image_to_pixmap
 from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGraphicsPixmapItem
-
-from pennyio.qt import image_to_pixmap
 
 Image = ndarray
 

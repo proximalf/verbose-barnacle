@@ -6,7 +6,8 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-STYLESHEET= "border: none; spacing: 3px; margin-top: 5px; margin-bottom: 5px;"
+STYLESHEET = "border: none; spacing: 3px; margin-top: 5px; margin-bottom: 5px;"
+
 
 class MatplotlibWidget(QWidget):
     """
@@ -102,4 +103,3 @@ class MatplotlibWidget(QWidget):
             return
         self.figure.tight_layout()
         self.canvas.draw()
-

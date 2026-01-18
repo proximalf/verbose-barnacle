@@ -1,6 +1,6 @@
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, NamedTuple
+from typing import Dict, List, NamedTuple, Optional, Tuple
 
 from PySide6.QtWidgets import QFileDialog, QWidget
 
@@ -14,19 +14,22 @@ class FileFilter(NamedTuple):
     )
 
     """
-   
+
     display_text: str
     suffix: str
 
     def as_Qfilter(self) -> str:
         """
-        Convert to 
+        Convert to
         Bitmap (*.bmp)
         """
         # Strip the leading `.`` incase it was included.
         return f"{self.display_text} (*.{self.suffix.lstrip(".")})"
 
-def convert_filter_to_qt(filter: Optional[List[FileFilter]] = None,) -> Tuple[List[str], str]:
+
+def convert_filter_to_qt(
+    filter: Optional[List[FileFilter]] = None,
+) -> Tuple[List[str], str]:
     """
     Converts a filter dict into something Qt can use.
     """
@@ -38,6 +41,7 @@ def convert_filter_to_qt(filter: Optional[List[FileFilter]] = None,) -> Tuple[Li
     filter_string = ";; ".join(filter_list)
 
     return filter_list, filter_string
+
 
 class FileDialog:
     """

@@ -5,6 +5,7 @@ from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QImage, QPixmap, QTransform
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsScene, QWidget
 
+
 def pythagoran_view_ratio(scene: QGraphicsScene, viewport: QWidget) -> float:
     """
     Calculates the pythagoran of a scene and viewport sizes, returning a ratio of from their respective sizes.
