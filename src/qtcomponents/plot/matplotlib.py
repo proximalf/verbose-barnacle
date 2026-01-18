@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
+STYLESHEET= "border: none; spacing: 3px; margin-top: 5px; margin-bottom: 5px;"
 
 class MatplotlibWidget(QWidget):
     """
@@ -47,6 +48,7 @@ class MatplotlibWidget(QWidget):
 
         if toolbar:
             self.toolbar = NavigationToolbar(self.canvas, self)
+            self.toolbar.setStyleSheet(STYLESHEET)
             self.vbox.addWidget(self.toolbar)
 
         self.vbox.addWidget(self.canvas)
