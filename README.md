@@ -35,6 +35,10 @@ qtcomponent -w test.test_widgets:test_event
 qtcomponent -w operations:extension -e operations.menu:OperationAction.Threshold
 ```
 
+```shell
+qtcomponent -w darkroom.tools.debugger.dialog:DebuggerDialog -D
+```
+
 
 ### Entrypoints
 Has support for overriding the default behaviour by creating an entrypoint.
