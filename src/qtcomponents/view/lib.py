@@ -1,8 +1,7 @@
 from typing import Tuple
 
-import numpy as np
-from PySide6.QtCore import QPoint, Qt
-from PySide6.QtGui import QImage, QPixmap, QTransform
+from PySide6.QtCore import QPoint
+from PySide6.QtGui import QTransform
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsScene, QWidget
 
 
@@ -35,6 +34,7 @@ def clamp_point_to_item(point: QPoint, item: QGraphicsItem) -> QPoint:
     QPoint
         Point clamped to image bounds.
     """
+
     rect = item.boundingRect()
     x_outside = min(point.x(), rect.right())
     y_outside = min(point.y(), rect.bottom())
@@ -55,6 +55,7 @@ def aboslute_scene_size(scene: QGraphicsScene, transform: QTransform) -> Tuple[f
         (width, heigth): pixel dimensions
 
     """
+
     rect = scene.sceneRect()
 
     # Get the scaling factors from the transform
@@ -76,7 +77,8 @@ def absolute_scene_scale_ratio_of_viewport(
     """
     Calculate the ratio of absolute scene size with respect to the viewport.
     ie: `absolute_height / view_height, absolute_width / view_width`
-    Providing a value for `adjustment_ratio` will adjust the scene dimensions by this amount, as it is an interpretation of what the size will be.
+    Providing a value for `adjustment_ratio` will adjust the scene dimensions by this amount,
+    as it is an interpretation of what the size will be.
 
     Returns
     ----------
