@@ -1,8 +1,14 @@
 from typing import Optional, Tuple
 
 from PySide6.QtCore import QPointF, Qt, Signal
-from PySide6.QtGui import QCursor, QKeyEvent, QMouseEvent, QPainter, QWheelEvent
-from PySide6.QtWidgets import QGraphicsView
+from PySide6.QtGui import (
+    QCursor,
+    QKeyEvent,
+    QMouseEvent,
+    QPainter,
+    QWheelEvent,
+)
+from PySide6.QtWidgets import QGraphicsItem, QGraphicsView
 
 from .lib import absolute_scene_scale_ratio_of_viewport
 
@@ -18,14 +24,35 @@ class ImageViewer(QGraphicsView):
     """
     An implementation of QGraphicsView for viewing images, partially inspired by pyqtGraph.
     The signals emitted return coordinates relative to the scene.
+
+    Signals
+    -------
+    key_pressed: QKeyEvent
+
+    mouse_position: QPointF
+    mouse_pressed: QPointF, MouseButton
+    mouse_released: QPointF, MouseButton
+    mouse_double_clicked: QPointF, MouseButton
+
+    mouse_event: QMouseEvent
+        A generic mouse event, only emitted on mouse move, used of grabbing if a modifier is held whilst mouse moves.
     """
 
     signal_key_pressed: Signal = Signal(QKeyEvent)
+
     signal_zoom_changed: Signal = Signal(float)
+
     # Mapped to scene position
     signal_mouse_position: Signal = Signal(QPointF)
     signal_mouse_pressed: Signal = Signal(QPointF, Qt.MouseButton)
     signal_mouse_released: Signal = Signal(QPointF, Qt.MouseButton)
+    signal_mouse_double_clicked: Signal = Signal(QPointF, Qt.MouseButton)
+    # Generic mouse event, to catch when a modifer is applied
+    signal_mouse_event: Signal = Signal(QMouseEvent)
+
+    signal_item_selected: Signal = Signal(QGraphicsItem)
+    signal_item_removed: Signal = Signal(QGraphicsItem)
+    signal_item_added_to_scene: Signal = Signal()
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -36,9 +63,6 @@ class ImageViewer(QGraphicsView):
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
 
     def absolute_scene_scale_ratio_of_viewport(self, adjustment_ratio: float = 1.0) -> Tuple[float, float]:
-        """
-        Returns the absolute scale of the the scene with respect to the viewport.
-        """
         return absolute_scene_scale_ratio_of_viewport(
             scene=self.scene(),
             transform=self.transform(),
@@ -50,8 +74,13 @@ class ImageViewer(QGraphicsView):
         """
         Reset the view to the current largest items bounding rect.
         If there are no items the method call is ignored.
+
+        Emits `signal_zoom_changed` with value `1.0` when called.
         """
         self.fitInView(self.scene().sceneRect(), aspectRadioMode=Qt.AspectRatioMode.KeepAspectRatio)
+        # Not sure if this is the correct thing to do, 
+        # but if the zoom changes the correct value will emit.
+        self.signal_zoom_changed.emit(1.0) 
 
     def zoom(self, direction: int, rate: float = DELTA_SCALE) -> None:
         """
@@ -99,9 +128,9 @@ class ImageViewer(QGraphicsView):
         else:
             self.setDragMode(QGraphicsView.DragMode.NoDrag)
 
-    def emit_cursor_position(self, event: Optional[QMouseEvent] = None) -> None:
+    def is_cursor_in_scene(self, event: Optional[QMouseEvent] = None) -> Optional[QPointF]:
         """
-        Emits the cursor position from global context to within the scene.
+        Checks if cursor is on scene.
         If a QMouseEvent is supplied the position of the event is used instead.
         """
         if not LOCK_MOUSE_TRACKING_TO_SCENE:
@@ -112,12 +141,24 @@ class ImageViewer(QGraphicsView):
         # emit if in scene
         scene_position = self.mapToScene(cursor_pos)
         if self.scene().sceneRect().contains(scene_position):
-            self.signal_mouse_position.emit(scene_position)
+            return scene_position
+
+    def emit_cursor_position(self, event: Optional[QMouseEvent] = None) -> None:
+        """
+        Emits the cursor position from global context to within the scene.
+        If a QMouseEvent is supplied the position of the event is used instead.
+        """
+        scene_position = self.is_cursor_in_scene(event)
+        if scene_position is None:
+            return
+        self.signal_mouse_position.emit(scene_position)
+
+        if event is None:
+            return
+        # Do not emit if event is none.
+        self.signal_mouse_event.emit(event)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        """
-        Emits key presses as a signal.
-        """
         self.signal_key_pressed.emit(event)
         return super().keyPressEvent(event)
 
@@ -157,8 +198,11 @@ class ImageViewer(QGraphicsView):
         Handle mouse press event.
         """
         button = event.button()
-        scene_position = self.mapToScene(event.pos())
-        self.signal_mouse_pressed.emit(scene_position, event.button())
+
+        scene_position = self.is_cursor_in_scene(event)
+
+        if scene_position is not None:
+            self.signal_mouse_pressed.emit(scene_position, event.button())
 
         if button == Qt.MouseButton.MiddleButton:
             # switch on click
@@ -171,12 +215,21 @@ class ImageViewer(QGraphicsView):
         Reimplemented method.
         Handle mouse release event.
         """
-        scene_position = self.mapToScene(event.pos())
-        self.signal_mouse_released.emit(scene_position, event.button())
+        scene_position = self.is_cursor_in_scene(event)
+
+        if scene_position is not None:
+            self.signal_mouse_released.emit(scene_position, event.button())
         super().mouseReleaseEvent(event)
 
-    def mouseDoubleClickEvent(self, event) -> None:
+    def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
         """
         Handle double click
         """
-        ...
+        button = event.button()
+
+        scene_position = self.is_cursor_in_scene(event)
+
+        if scene_position is not None:
+            self.signal_mouse_double_clicked.emit(scene_position, button)
+
+        super().mouseDoubleClickEvent(event)

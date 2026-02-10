@@ -13,6 +13,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QWidget
 
+ENTRY_POINT_NAME = "qtcomponents.execute"
 
 def load_function_entry_point() -> Callable | None:
     """
@@ -20,9 +21,9 @@ def load_function_entry_point() -> Callable | None:
     """
     from importlib.metadata import entry_points
 
-    eps = entry_points(group="qtcomponents.function")
+    eps = entry_points(group=ENTRY_POINT_NAME)
 
-    for ep in eps.select(name="function"):
+    for ep in eps.select(name="execute"):
         extension: Callable = ep.load()
         return extension
 

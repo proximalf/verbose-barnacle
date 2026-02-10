@@ -1,4 +1,4 @@
 from .component import ImageViewComponent
 from .graphicsview import ImageViewer
-from .image import Image, ImageItem
+from .image import Image, ImageItem, pixmap_from_numpy
 from .scene import ImageViewerScene, SceneLayer
