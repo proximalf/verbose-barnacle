@@ -26,6 +26,7 @@ class XYPositionWidget(QWidget):
             group = QGroupBox(title, self)
             group.setLayout(layout)
             n_layout.addWidget(group)
+            n_layout.setContentsMargins(0,0,0,0)
             self.setLayout(n_layout)
         else:
             layout.setContentsMargins(0, 0, 0, 0)
