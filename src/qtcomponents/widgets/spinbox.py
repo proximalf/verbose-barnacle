@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QSlider,
     QSpinBox,
-    QWidget,
+    QWidget, QDoubleSpinBox,
 )
 
 
@@ -26,8 +26,10 @@ class LabelledSpinbox(QWidget):
     initial_value: int = 10,
     """
 
+    spinbox: QSpinBox | QDoubleSpinBox
+
     def __init__(
-        self, label: str, min: int = 0, max: int = 100, step: int = 5, initial_value: int = 10, *args, **kwargs
+        self, label: str, min: int | float = 0, max: int | float = 100, step: int | float = 5, initial_value: int | float = 10, type: type = int, *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         layout = QHBoxLayout()
@@ -39,27 +41,41 @@ class LabelledSpinbox(QWidget):
         self.label.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Ignored))
         layout.addWidget(self.label)
 
-        self.spinbox: QSpinBox = QSpinBox(self)
-        self.spinbox.setMinimum(min)
-        self.spinbox.setMaximum(max)
-        self.spinbox.setValue(initial_value)
-        self.spinbox.setSingleStep(step)
+        self._type = type
+        
+        if type is int:
+            self.spinbox = QSpinBox(self)            
+            self.spinbox.setMinimum(int(min))
+            self.spinbox.setMaximum(int(max))
+            self.spinbox.setValue(int(initial_value))
+            self.spinbox.setSingleStep(int(step))
+        else: 
+            self.spinbox = QDoubleSpinBox(self)
+            self.spinbox.setMinimum(int(min))
+            self.spinbox.setMaximum(int(max))
+            self.spinbox.setValue(int(initial_value))
+            self.spinbox.setSingleStep(int(step))
+
         layout.addWidget(self.spinbox)
 
         # Expose common signals
         self.valueChanged: SignalInstance = self.spinbox.valueChanged
 
-    def value(self) -> int:
+    def value(self) -> int | float:
         """
         Get spinbox value.
         """
         return self.spinbox.value()
 
-    def setValue(self, value: int) -> None:
+    def setValue(self, value: int | float) -> None:
         """
         Set spinbox value.
         """
-        self.spinbox.setValue(value)
+        if self._type is int:
+            self.spinbox.setValue(int(value))
+        else:
+            self.spinbox.setValue(value)
+
 
 
 class SpinboxSlider(QWidget):
