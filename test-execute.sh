@@ -1,2 +1,2 @@
 uv pip install -e ./[cli]
-qtcomponent -w qtcomponents.table:DataTable
+uv run qtcomponent -w qtcomponents.table:DataTable --another hello

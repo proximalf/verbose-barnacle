@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from pennyio import Image
-from pennyio.qt import image_to_pixmap
+from ..image import Image, image_to_pixmap
 from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGraphicsPixmapItem
@@ -64,12 +63,3 @@ class ImageItem(QGraphicsPixmapItem):
         If image is empty, will return `False`.
         """
         return self.is_image_set() and self.isUnderMouse()
-
-
-def pixmap_from_numpy(image: Image) -> ImageItem:
-    """
-    Convert a numpy array image into an ImageItem for use in a Qt Scene.
-    """
-    pixmap = ImageItem()
-    pixmap.update_image(image)
-    return pixmap

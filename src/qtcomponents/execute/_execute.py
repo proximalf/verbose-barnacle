@@ -1,6 +1,7 @@
+from click import Context
 from enum import Enum
 from pathlib import Path
-from typing import Callable, Iterator
+from typing import Callable, Iterator, Dict, List
 
 try:
     import click
@@ -20,13 +21,20 @@ from .lib import (
 )
 
 
-@click.command()
+@click.command(
+    name="qtcomponent-execute",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    )
+)
 @click.option("-w", "--widget", "widget_path", default=None)
 @click.option("-e", "--enum", "enum_path", default=None)
 @click.option("-R", "--raise", "raise_on_error", default=False, is_flag=True)
 @click.option("-D", "--default", "default_behaviour", default=False, is_flag=True)
+@click.argument("addtional_options", nargs=-1, type=click.UNPROCESSED)
 def main(
-    widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False
+    widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False, addtional_options: List[str] | None = None,
 ) -> None:
     """
     A cli interface for executing a given QWidget from an entry point, or object returns a widget.
@@ -39,9 +47,20 @@ def main(
     Parameters
     ----------
     widget_path: str
-        ie: `qtcomponents.table:DataTable`
+        Example: `qtcomponents.table:DataTable`
     enum_path: str
-        ie: module:Enum.Value
+        Example: `module:Enum.Value`
+    raise_on_error: bool
+        Print Exception traceback rather than print an error message when trying to load entrypoint.
+    default_behaviour: bool
+        Set flag to force default behaviour, used when environment has a custom plugin entrypoint.
+    addtional_options: str
+        A list of raw strs, any addtional options that are passed to plugin.
+        Example: ('--path', '~/image.png', '--pixel-size', '11.6')
+        This is converted into a dict of pairs, '--' stripped, and passed as `**kwargs` to the plugin.
+        kebab-case is converted to snake_case.
+        (path='~/image.png', pixel_size='11.6')
+
     """
     if widget_path is None:
         raise SystemExit("Instances the widget directly." "Usage: qtcomponent -w qtcomponents.table:DataTable")
@@ -73,8 +92,24 @@ def main(
         return
 
     echo(f"Plugin entrypoint discovered - {plugin}")
+    
+    if addtional_options is not None: 
+        echo(f"Addtional options passsed - {addtional_options}")
+        try:
+            if (l := len(addtional_options)) >= 2:
+                addtional_options: Dict[str, str] = {
+                    addtional_options[i][2:].lstrip("--").replace("-", "_"): addtional_options[i+1] 
+                    for i in range(0, l, 2)
+                    }
+        except:
+            raise
+
     try:
-        plugin(entry, enum)
+        if isinstance(addtional_options, dict):
+            plugin(entry, enum, **addtional_options)
+
+        plugin(entry, enum, addtional_options)
+        
     except:
         echo(f"Failed to run plugin - {plugin}")
         raise

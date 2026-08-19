@@ -41,22 +41,25 @@ qtcomponent -w darkroom.tools.debugger.dialog:DebuggerDialog -D
 
 
 ### Entrypoints
+
 Has support for overriding the default behaviour by creating an entrypoint.
-
 I have a more complicated QtApp, creating widgets in code is way more mangable than QtCreator, and so I needed a quick means of checking them out.
-
 Below is an example of defining the entrypoint. 
+
 ```toml
-[project.entry-points."qtcomponents.function"]
-function = "test.test_plugin:qtcomponent_plugin"
+[project.entry-points."qtcomponents.execute"]
+execute = "test.test_plugin:qtcomponent_plugin"
 ```
 
 #### Plugin Function Signiture
+
 This overides the default behaviour and can be used for effectively anything.
+If this is possible, why include this at all, its a matter of convience as I use this package 
+for a few projects and the default behaviour is still useful, even in environments with a plugin entrypoint.
 
 
 ```python
-def qtcomponent_plugin(entry: Callable[..., Any], enum: Enum) -> None:
+def qtcomponent_plugin(entry: Callable[..., Any], enum: Enum, kwargs: List[str] | None) -> None:
     """
     Entry Point.
 
@@ -67,7 +70,41 @@ def qtcomponent_plugin(entry: Callable[..., Any], enum: Enum) -> None:
     
     enum: Enum
         Any Enum that would be returned from the arg passed to `-e`.
+    
+    **kwargs: List[str] | None
+        If any addtional arguments are provided this arg will be a dict of raw strs, 
+        any addtional kwargs that are passed to plugin.
     """
 ```
 
-It might be possible to use a watch program, to rerun on updates.
+##### Example
+
+```python
+...
+def test_extension(entry: Callable[..., Tool], enum: ToolAction) -> None:
+
+    app = Application()
+    app.action_handler.open_file_from_path(DEBUG_IMAGE)
+    app.mw.show()
+
+    try:
+        extension: Tool = entry()
+        app.register_extension(extension)
+    except:
+        print(f"Failed to run extension: {entry}")
+        raise
+
+    # If a menu action is provided
+    if enum:
+        try:
+            app.toolbox.execute_tool(extension, enum)
+        except Exception as e:
+            print(f"Failed to run action: {enum} - {e}")
+            raise
+
+    # Application loop
+    exit_code = app.exec()
+    print(exit_code)
+
+```
+
