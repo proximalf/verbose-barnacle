@@ -1,6 +1,6 @@
 [project]
 name = "qtcomponents"
-version = "0.5.0"
+version = "0.6.0"
 description = "Common component library for PySide6"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -16,6 +16,10 @@ license = {text = "MIT"}
 cli = [
     "click>=8.3.0"
 ]
+image = [
+    "pennyio>=0.2.7",
+]
+
 
 [build-system]
 requires = ["hatchling"]
