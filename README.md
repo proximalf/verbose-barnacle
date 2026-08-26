@@ -8,6 +8,19 @@ Add using uv `uv add git+https://github.com/proximalf/verbose-barnacle` or add t
 qtcomponents = { git = "https://github.com/proximalf/verbose-barnacle" }
 ```
 
+## Image
+`pip install qtcomponents[image]` <!-- REMINDER TO UPDATE WITH `UV ADD ...` FROM GIT I THINK IT IS THE SAME -->
+
+A utility function for converting numpy array images into `QPixmap` / `QImage`.
+
+```python
+def image_to_pixmap(image: Image) -> QPixmap:
+    ...
+```
+
+Also provides a convience filter for image files:
+`IMAGE_FILE_FILTER`
+
 ## CLI App - `qtcomponent`
 `pip install qtcomponents[cli]` <!-- REMINDER TO UPDATE WITH `UV ADD ...` FROM GIT I THINK IT IS THE SAME -->
 
