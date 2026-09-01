@@ -55,6 +55,7 @@ class PathWidget(QWidget):
     ----------
     signal_path_selected: SignalInstance
     signal_many_paths_selected: SignalInstance
+
     path: Path | None
     paths: List[Path] | None
         List of Paths if OpenMany is the set state.
@@ -82,7 +83,6 @@ class PathWidget(QWidget):
         caption: str = "",
         filter: List[FileFilter] | None = None,
         path: Path | None = None,
-        # layout_direction: Qt.LayoutDirection = Qt.LayoutDirection.RightToLeft,
         *args,
         **kwargs,
     ) -> None:
@@ -192,3 +192,114 @@ class PathWidget(QWidget):
                 
         # Reset if path is valid.
         self.line_edit.is_invalid(False)
+
+
+# uv run qtcomponent -w qtcomponents.widgets.path:PathWidget --label="Test Label" --button-text="Button"
+class PathButton(QPushButton):
+    """
+    A simple button, a reduced version of PathWidget, clicking the button 
+    will open a FileDialog, result of this will be emitted as a signal and 
+    stored in the button.
+    
+    Parameters
+    ----------
+    state: PathWidgetState = PathWidgetState.Open
+        State to initialise the Widget as.
+    label: str | None
+        If no label provide it will not display a label.
+    button_text: str | None
+        Set the text on the button, else defaults to PathWidgetState value.
+    caption: str = ""
+        The caption used in the FileDialog.
+    filter: List[FileFilter] | None
+        The filter used for the FileDialog.
+    path: Path 
+        Provide a path to preload widget with, set the attribute `directory` as the parent of this path.
+
+    Attributes
+    ----------
+    signal_path_selected: SignalInstance
+    signal_many_paths_selected: SignalInstance
+
+    path: Path | None
+    paths: List[Path] | None
+        List of Paths if OpenMany is the set state.
+    directory: Path | None
+        The directory the dialog when open into, this can be set at widget initialisation,
+        or updated later, when the button is clicked it will open into this dir, if valid.
+
+    """
+
+    signal_path_selected: SignalInstance = Signal(Path)  # ty:ignore[invalid-assignment]
+    signal_many_paths_selected: SignalInstance = Signal(List[Path])  # ty:ignore[invalid-assignment]
+    
+    path: Path | None = None
+    paths: List[Path] | None = None
+    directory: Path | None = None
+
+
+    def __init__(
+        self,
+        state: PathWidgetState = PathWidgetState.Open,
+        button_text: str | None = None,
+        caption: str = "",
+        filter: List[FileFilter] | None = None,
+        path: Path | None = None,
+        *args,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.path = path
+        
+        if path and path.is_file():
+            self.directory = path.parent
+        elif path and path.is_dir(): 
+            self.directory = path
+        else:
+            self.directory = None
+
+        self.state = state
+        self.caption = caption
+        self.filter = filter
+        
+        self.setText(button_text or state.value)
+
+        self.connect_signals()
+
+    def connect_signals(self) -> None:
+        self.clicked.connect(self.handle_button)    
+
+    def open_file_dialog(self, directory: Path | None = None) -> Path | List[Path] | None:
+        """
+        Setting directory will open dialog in said directory.
+        """
+        match self.state:
+            case PathWidgetState.Open:
+                return FileDialog.open(self, directory, self.caption, self.filter)
+            case PathWidgetState.OpenMany:
+                return FileDialog.opens(self, directory, self.caption, self.filter)
+            case PathWidgetState.Save:
+                return FileDialog.save(self, directory, self.caption, self.filter)
+            case _:
+                return
+    
+    def handle_button(self) -> None:
+        """
+        When button clicked open dialog, then store result in widget and also emit signal.
+        """
+
+        path = self.open_file_dialog(self.directory)
+
+        if path is None:
+            return
+
+        if isinstance(path, Path):
+            self.path = path
+            self.directory = path.parent
+            self.signal_path_selected.emit(self.path)
+        else:
+            self.paths = path
+            self.path = path[0] # set as first path
+            self.directory = path[0].parent
+            self.signal_many_paths_selected.emit(self.path)
+        
