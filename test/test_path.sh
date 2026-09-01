@@ -1,0 +1,1 @@
+uv run qtcomponent -w qtcomponents.widgets.path:PathWidget --label="Test Label" --button-text="Button"

@@ -180,6 +180,6 @@ class FileDialog:
             return filepath
 
         if append_suffix and filter is not None:
-            return filepath.with_suffix(filter[selected_filter])
+            return filepath.with_suffix(selected_filter)
 
         return filepath
