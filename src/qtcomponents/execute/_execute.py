@@ -86,36 +86,47 @@ def main(
     enum = None if enum_path is None else resolve_enum(enum_path)
 
     plugin = load_function_entry_point()
-
-    if plugin is None or default_behaviour:
-        default(widget_path, entry, enum)
-        return
-
-    echo(f"Plugin entrypoint discovered - {plugin}")
     
     if addtional_options is not None: 
         echo(f"Addtional options passsed - {addtional_options}")
         try:
-            if (l := len(addtional_options)) >= 2:
-                addtional_options: Dict[str, str] = {
-                    addtional_options[i][2:].lstrip("--").replace("-", "_"): addtional_options[i+1] 
-                    for i in range(0, l, 2)
-                    }
+            if isinstance(addtional_options, tuple):
+                options: Dict[str, str] = {}
+                
+                for i in addtional_options:
+                    name, value = i.split("=")
+                    n = name.lstrip("--").replace("-", "_") 
+                    options[n] = value
+
+                echo(f"Converted options - {options}")
+            
         except:
             raise
+    
+    if plugin is None or default_behaviour:
+        if isinstance(options, dict):
+            default(widget_path, entry, enum, **options)
+            return
+
+        default(widget_path, entry, enum)
+        return
+
+    echo(f"Plugin entrypoint discovered - {plugin}")
 
     try:
-        if isinstance(addtional_options, dict):
-            plugin(entry, enum, **addtional_options)
-
+        if isinstance(options, dict):
+            plugin(entry, enum, **options)
+            return
+        
         plugin(entry, enum, addtional_options)
+        return
         
     except:
         echo(f"Failed to run plugin - {plugin}")
         raise
 
 
-def default(widget_path: str, entry: Callable[..., QWidget], enum: Enum | None) -> None:
+def default(widget_path: str, entry: Callable[..., QWidget], enum: Enum | None, **kwargs) -> None:
     """
     Default operation of CLI app if no entrypoint is found.
     """
@@ -124,11 +135,15 @@ def default(widget_path: str, entry: Callable[..., QWidget], enum: Enum | None) 
         QT_APP = QApplication(sys.argv)
 
     try:
-        widget: QWidget = entry() if enum is None else entry(enum)
+
+        widget: QWidget = entry(**kwargs) if enum is None else entry(enum)
+        
         if widget is None:
             echo(f"Returned value was None.")
             return
+        
         widget.show()
+    
     except:
         echo(f"Failed to run widget - {widget_path}")
         raise
