@@ -2,7 +2,7 @@ from typing import Optional
 
 from PySide6.QtWidgets import QWidget
 
-from .graphicsview import ImageViewer
+from .graphicsview import ImageViewer, ImageViewerSignals
 from .image import Image, ImageItem
 from .scene import ImageViewerScene, SceneLayer
 
@@ -17,6 +17,7 @@ class ImageViewComponent:
     
     viewer: ImageViewer
     scene: ImageViewerScene
+    signals: ImageViewerSignals
 
     def __init__(self, parent: Optional[QWidget] = None, *args, **kwargs) -> None:
         self.viewer = ImageViewer(parent=parent)
@@ -25,6 +26,7 @@ class ImageViewComponent:
 
         self.image_item = ImageItem()
         self.scene.add_item(self.image_item, layer=SceneLayer.Image)
+        self.signals = self.viewer.signals
 
     @property
     def _raw_image(self) -> Image:
