@@ -20,25 +20,30 @@ MOUSE_TRACKING = True
 LOCK_MOUSE_TRACKING_TO_SCENE = True  # Setting this to false will break alot of stuff.
 
 class ImageViewerSignals(QObject):
-    key_pressed: SignalInstance = Signal(QKeyEvent)
-    zoom_changed: SignalInstance = Signal(float)
+    key_pressed: SignalInstance = Signal(QKeyEvent) # ty: ignore[invalid-assignment]
+    zoom_changed: SignalInstance = Signal(float)  # ty: ignore[invalid-assignment]
 
     # Generic mouse event, to catch when a modifer is applied
-    mouse_event: SignalInstance = Signal(QMouseEvent)
-    mouse_position: SignalInstance = Signal(QPointF)
-    mouse_pressed: SignalInstance = Signal(QPointF, Qt.MouseButton)
-    mouse_released: SignalInstance = Signal(QPointF, Qt.MouseButton)
-    mouse_double_clicked: SignalInstance = Signal(QPointF, Qt.MouseButton)
+    mouse_event: SignalInstance = Signal(QMouseEvent) # ty: ignore[invalid-assignment]
+    mouse_position: SignalInstance = Signal(QPointF) # ty: ignore[invalid-assignment]
+    mouse_pressed: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
+    mouse_released: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
+    mouse_double_clicked: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
     
-    item_selected: SignalInstance = Signal(QGraphicsItem)
-    item_removed: SignalInstance = Signal(QGraphicsItem)
-    item_added_to_scene: SignalInstance = Signal()
+    item_selected: SignalInstance = Signal(QGraphicsItem) # ty: ignore[invalid-assignment]
+    item_removed: SignalInstance = Signal(QGraphicsItem) # ty: ignore[invalid-assignment]
+    item_added_to_scene: SignalInstance = Signal() # ty: ignore[invalid-assignment]
 
 
 class ImageViewer(QGraphicsView):
     """
     An implementation of QGraphicsView for viewing images, partially inspired by pyqtGraph.
     The signals emitted return coordinates relative to the scene.
+
+    Parameters
+    ----------
+    reactive: bool = True
+        Set to False to disable reactive elements.
 
     Signals
     -------
@@ -53,27 +58,12 @@ class ImageViewer(QGraphicsView):
         A generic mouse event, only emitted on mouse move, used of grabbing if a modifier is held whilst mouse moves.
     """
 
-    # signal_key_pressed: Signal = Signal(QKeyEvent)
-
-    # signal_zoom_changed: Signal = Signal(float)
-
-    # Mapped to scene position
-    # signal_mouse_position: Signal = Signal(QPointF)
-    # signal_mouse_pressed: Signal = Signal(QPointF, Qt.MouseButton)
-    # signal_mouse_released: Signal = Signal(QPointF, Qt.MouseButton)
-    # signal_mouse_double_clicked: Signal = Signal(QPointF, Qt.MouseButton)
-    # Generic mouse event, to catch when a modifer is applied
-    # signal_mouse_event: Signal = Signal(QMouseEvent)
-
-    # signal_item_selected: Signal = Signal(QGraphicsItem)
-    # signal_item_removed: Signal = Signal(QGraphicsItem)
-    # signal_item_added_to_scene: Signal = Signal()
-
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, reactive: bool = True, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._drag_mode = DRAG_MODE_DEFAULT
+        self.reactive = reactive
         self.setMouseTracking(MOUSE_TRACKING)
-        self.signals: ImageViewer = ImageViewerSignals(self)
+        self.signals: ImageViewerSignals = ImageViewerSignals(self)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
@@ -164,6 +154,9 @@ class ImageViewer(QGraphicsView):
         Emits the cursor position from global context to within the scene.
         If a QMouseEvent is supplied the position of the event is used instead.
         """
+        if not self.reactive:
+            return
+
         scene_position = self.is_cursor_in_scene(event)
         if scene_position is None:
             return
@@ -175,7 +168,10 @@ class ImageViewer(QGraphicsView):
         self.signals.mouse_event.emit(event)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        self.signal_key_pressed.emit(event)
+        if not self.reactive:
+            return
+            
+        self.signals.key_pressed.emit(event)
         return super().keyPressEvent(event)
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
@@ -193,6 +189,8 @@ class ImageViewer(QGraphicsView):
         If modifier is held pass events on to normal scroll area functionality.
         Otherwise zoom.
         """
+        if not self.reactive:
+            return
         modifier_held = event.modifiers()
 
         if modifier_held:
@@ -213,12 +211,15 @@ class ImageViewer(QGraphicsView):
         Reimplemented method.
         Handle mouse press event.
         """
+        if not self.reactive:
+            return
+
         button = event.button()
 
         scene_position = self.is_cursor_in_scene(event)
 
         if scene_position is not None:
-            self.signal_mouse_pressed.emit(scene_position, event.button())
+            self.signals.mouse_pressed.emit(scene_position, event.button())
 
         if button == Qt.MouseButton.MiddleButton:
             # switch on click
@@ -231,16 +232,22 @@ class ImageViewer(QGraphicsView):
         Reimplemented method.
         Handle mouse release event.
         """
+        if not self.reactive:
+            return
+
         scene_position = self.is_cursor_in_scene(event)
 
         if scene_position is not None:
-            self.signal_mouse_released.emit(scene_position, event.button())
+            self.signals.mouse_released.emit(scene_position, event.button())
         super().mouseReleaseEvent(event)
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
         """
         Handle double click
         """
+        if not self.reactive:
+            return
+
         button = event.button()
 
         scene_position = self.is_cursor_in_scene(event)

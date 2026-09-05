@@ -19,8 +19,8 @@ class ImageViewComponent:
     scene: ImageViewerScene
     signals: ImageViewerSignals
 
-    def __init__(self, parent: Optional[QWidget] = None, *args, **kwargs) -> None:
-        self.viewer = ImageViewer(parent=parent)
+    def __init__(self, parent: Optional[QWidget] = None, reactive: bool = True, *args, **kwargs) -> None:
+        self.viewer = ImageViewer(parent=parent, reactive=reactive)
         self.scene = ImageViewerScene(parent=parent)
         self.viewer.setScene(self.scene)
 
