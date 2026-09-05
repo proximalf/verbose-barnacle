@@ -94,3 +94,18 @@ def image_to_pixmap(image: Image) -> QPixmap:
 
     pixmap = QPixmap.fromImage(qimage, Qt.ImageConversionFlag.ColorOnly)
     return pixmap
+
+
+def qimage_to_numpy(qimage: QImage) -> np.ndarray:
+    """
+    Convert QImage to numpy array.
+    """
+
+    qimage = qimage.convertToFormat(QImage.Format.Format_RGBA8888)
+
+    width = qimage.width()
+    height = qimage.height()
+
+    ptr = qimage.constBits()
+    
+    return np.array(ptr).reshape(height, width, 4)
