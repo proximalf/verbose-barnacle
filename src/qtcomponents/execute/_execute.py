@@ -85,7 +85,7 @@ def main(
 
     enum = None if enum_path is None else resolve_enum(enum_path)
 
-    plugin = load_function_entry_point()
+    plugin = load_function_entry_point() if not default_behaviour else None
     
     echo(f"Plugin: {plugin}" if plugin else "Default Behaviour", nl = False)
     if addtional_options is not None: 

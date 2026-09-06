@@ -10,8 +10,9 @@ from PySide6.QtWidgets import (
     QWidget, QDoubleSpinBox,
 )
 
+A = int | float
 
-class LabelledSpinbox(QWidget):
+class LabelledSpinbox[T: int | float](QWidget):
     """
     A labelled spinbox.
 
@@ -29,7 +30,7 @@ class LabelledSpinbox(QWidget):
     spinbox: QSpinBox | QDoubleSpinBox
 
     def __init__(
-        self, label: str, min: int | float = 0, max: int | float = 100, step: int | float = 5, initial_value: int | float = 10, type: type = int, *args, **kwargs
+        self, label: str, min: A = 0, max: A = 100, step: A = 5, initial_value: A = 10, type: type = int, *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         layout = QHBoxLayout()
@@ -51,30 +52,30 @@ class LabelledSpinbox(QWidget):
             self.spinbox.setSingleStep(int(step))
         else: 
             self.spinbox = QDoubleSpinBox(self)
-            self.spinbox.setMinimum(int(min))
-            self.spinbox.setMaximum(int(max))
-            self.spinbox.setValue(int(initial_value))
-            self.spinbox.setSingleStep(int(step))
+            self.spinbox.setMinimum(min)
+            self.spinbox.setMaximum(max)
+            self.spinbox.setValue(initial_value)
+            self.spinbox.setSingleStep(step)
 
         layout.addWidget(self.spinbox)
 
         # Expose common signals
         self.valueChanged: SignalInstance = self.spinbox.valueChanged
 
-    def value(self) -> int | float:
+    def value(self) -> T:
         """
         Get spinbox value.
         """
-        return self.spinbox.value()
+        return self.spinbox.value()  # ty: ignore[invalid-return-type]
 
-    def setValue(self, value: int | float) -> None:
+    def setValue(self, value: T) -> None:
         """
         Set spinbox value.
         """
         if self._type is int:
             self.spinbox.setValue(int(value))
         else:
-            self.spinbox.setValue(value)
+            self.spinbox.setValue(value)  # ty: ignore[invalid-argument-type]
 
 
 
@@ -86,7 +87,7 @@ class SpinboxSlider(QWidget):
     valueChanged: SignalInstance
 
     def __init__(
-        self, value: int = 0, label: str | None = None, range: Tuple[int, int] = (0, 100), suffix="%", *args, **kwargs
+        self, value: int = 0, label: str | None = None, range: Tuple[int, int] = (0, 100), suffix: str = "", *args, **kwargs
     ) -> None:
         super().__init__(*args, **kwargs)
         low, high = range
@@ -120,5 +121,5 @@ class SpinboxSlider(QWidget):
         self.spinbox.valueChanged.connect(self.slider.setValue)
         self.valueChanged = self.spinbox.valueChanged
 
-    def value(self) -> int | float:
+    def value(self) -> int:
         return self.spinbox.value()
