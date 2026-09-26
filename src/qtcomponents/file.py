@@ -56,7 +56,7 @@ class FileDialog:
     Parameters
     ----------
     parent: QWidget | None
-        Parent Qt object.
+        DEPRECIATED AS OF 0.6.5, MAKES WINDOW ACT AS MAIN WINDOW.
     directory: Path | None
         Directory to open the FileDialog into.
     caption: str | None
@@ -94,11 +94,12 @@ class FileDialog:
         filter_list, filter_string = convert_filter_to_qt(filter)
 
         qfilepath, _ = QFileDialog.getOpenFileName(
-            parent=parent,
+            parent=None,
             caption=caption,
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
+            options=QFileDialog.Option.DontUseNativeDialog # Inherit style sheet
         )
 
         # Do nothing if no file selected.
@@ -126,11 +127,12 @@ class FileDialog:
         filter_list, filter_string = convert_filter_to_qt(filter)
 
         qfilepaths, _ = QFileDialog.getOpenFileNames(
-            parent=parent,
+            parent=None,
             caption=caption,
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
+            options=QFileDialog.Option.DontUseNativeDialog
         )
 
         # Do nothing if no file selected.
@@ -164,11 +166,12 @@ class FileDialog:
         filter_list, filter_string = convert_filter_to_qt(filter)
 
         qfilepath, selected_filter = QFileDialog.getSaveFileName(
-            parent=parent,
+            parent=None,
             caption=caption,
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
+            options=QFileDialog.Option.DontUseNativeDialog
         )
         # Do nothing if no file selected.
         if len(qfilepath) == 0:
