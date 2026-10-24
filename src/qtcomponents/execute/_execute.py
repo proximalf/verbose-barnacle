@@ -87,6 +87,7 @@ def main(
 
     plugin = load_function_entry_point()
     
+    echo(f"Plugin: {plugin}" if plugin else "Default Behaviour", nl = False)
     if addtional_options is not None: 
         echo(f"Addtional options passsed - {addtional_options}")
         try:

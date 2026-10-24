@@ -2,12 +2,6 @@ from enum import Enum
 from pathlib import Path
 from typing import Callable
 
-try:
-    import click
-except:
-    pass
-
-
 import importlib
 import sys
 
