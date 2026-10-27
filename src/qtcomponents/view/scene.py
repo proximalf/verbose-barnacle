@@ -1,11 +1,12 @@
+import logging
 from enum import Enum
 from typing import Dict, List, Optional
 
-from PIL.Image import logger
 from PySide6.QtCore import QPointF
 from PySide6.QtGui import QColor, QPen, QTransform
 from PySide6.QtWidgets import QGraphicsItem, QGraphicsRectItem, QGraphicsScene
 
+logger = logging.getLogger(__package__)
 
 class SceneLayer(Enum):
     Background = 0
