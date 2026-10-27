@@ -22,7 +22,9 @@ Also provides a convience filter for image files:
 `IMAGE_FILE_FILTER`
 
 ## CLI App - `qtcomponent`
-`pip install qtcomponents[cli]` <!-- REMINDER TO UPDATE WITH `UV ADD ...` FROM GIT I THINK IT IS THE SAME -->
+```
+uv tool install --with "qtcomponents[cli] @ git+https://github.com/proximalf/verbose-barnacle.git" qtcomponents
+```
 
 A quick test utility for QtWidgets, initialises a QApplication instance if one doesn't already exist, that uses entrypoints to pass the desired object for display in a QApp.
 
@@ -70,7 +72,6 @@ This overides the default behaviour and can be used for effectively anything.
 If this is possible, why include this at all, its a matter of convience as I use this package 
 for a few projects and the default behaviour is still useful, even in environments with a plugin entrypoint.
 
-
 ```python
 def qtcomponent_plugin(entry: Callable[..., Any], enum: Enum, kwargs: List[str] | None) -> None:
     """
@@ -85,8 +86,8 @@ def qtcomponent_plugin(entry: Callable[..., Any], enum: Enum, kwargs: List[str] 
         Any Enum that would be returned from the arg passed to `-e`.
     
     **kwargs: List[str] | None
-        If any addtional arguments are provided this arg will be a dict of raw strs, 
-        any addtional kwargs that are passed to plugin.
+        If any addtional arguments (`--some thing`) are provided this arg will be a dict of raw strs, 
+        as kwargs that are passed to plugin. The leading `--` are stripped. ie ("some", "thing")
     """
 ```
 
