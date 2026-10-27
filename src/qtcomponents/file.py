@@ -99,7 +99,7 @@ class FileDialog:
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
-            options=QFileDialog.Option.DontUseNativeDialog # Inherit style sheet
+            options=QFileDialog.Option.DontUseNativeDialog,  # Inherit style sheet
         )
 
         # Do nothing if no file selected.
@@ -132,7 +132,7 @@ class FileDialog:
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
-            options=QFileDialog.Option.DontUseNativeDialog
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
 
         # Do nothing if no file selected.
@@ -171,7 +171,7 @@ class FileDialog:
             dir=str(directory) if directory is not None else "",
             filter=filter_string,
             selectedFilter=filter_list[0] if filter is not None else "",
-            options=QFileDialog.Option.DontUseNativeDialog
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         # Do nothing if no file selected.
         if len(qfilepath) == 0:

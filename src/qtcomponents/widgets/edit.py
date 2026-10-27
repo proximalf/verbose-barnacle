@@ -18,7 +18,13 @@ class LabelledLineEdit(QWidget):
     edit: QLineEdit
 
     def __init__(
-        self, label: str, default_string: str | None = None, placeholder_text: str = "", vertical: bool = True, *args, **kwargs
+        self,
+        label: str,
+        default_string: str | None = None,
+        placeholder_text: str = "",
+        vertical: bool = True,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
         self.setContentsMargins(0, 0, 0, 0)
@@ -27,7 +33,7 @@ class LabelledLineEdit(QWidget):
         self.setLayout(layout)
 
         self.label = QLabel(label, parent=self)
-        
+
         if vertical:
             self.label.setAlignment(Qt.AlignmentFlag.AlignBottom)
         else:
@@ -35,7 +41,7 @@ class LabelledLineEdit(QWidget):
 
         self.edit = QLineEdit(self)
         self.edit.setPlaceholderText(placeholder_text)
-        
+
         if default_string:
             self.edit.setText(default_string)
 
@@ -50,9 +56,11 @@ class LabelledLineEdit(QWidget):
     def text(self, text: str) -> None:
         self.edit.setText(text)
 
+
 # Validation property name
 # eg: QWidget[is_invalid="true" ] {...}
 _VALIDATION_PROPERTY = "is_invalid"
+
 
 class ValidatedLineEdit(QLineEdit):
     """

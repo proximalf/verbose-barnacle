@@ -4,7 +4,7 @@ from .plot import MatplotlibWidget
 
 try:
     # if Qt isn't installed this will fail
-    from .image import image_to_pixmap 
+    from .image import image_to_pixmap
 except ImportError or ModuleNotFoundError:
 
     def image_to_pixmap(*args, **kwargs):

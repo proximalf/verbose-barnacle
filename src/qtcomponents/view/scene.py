@@ -22,7 +22,7 @@ class ImageViewerScene(QGraphicsScene):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.drawn_debug = False # If debug is called, do not redraw.
+        self.drawn_debug = False  # If debug is called, do not redraw.
 
         # Generate Layers
         # Mock layer effect.
@@ -66,7 +66,7 @@ class ImageViewerScene(QGraphicsScene):
     def debug(self):
         """
         Shows scene rect, can only be called once, subsequent calls are ignored.
-        """        
+        """
         if self.drawn_debug:
             return
 

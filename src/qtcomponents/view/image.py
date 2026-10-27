@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from ..image import Image, image_to_pixmap
 from PySide6.QtCore import QRectF
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGraphicsPixmapItem
+
+from ..image import Image, image_to_pixmap
 
 
 class ImageItem(QGraphicsPixmapItem):

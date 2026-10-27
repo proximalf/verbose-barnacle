@@ -14,7 +14,7 @@ class ImageViewComponent:
     """
 
     display_image: Image
-    
+
     viewer: ImageViewer
     scene: ImageViewerScene
     signals: ImageViewerSignals

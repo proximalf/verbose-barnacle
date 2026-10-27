@@ -1,7 +1,8 @@
-from click import Context
 from enum import Enum
 from pathlib import Path
-from typing import Callable, Iterator, Dict, List
+from typing import Callable, Dict, Iterator, List
+
+from click import Context
 
 try:
     import click
@@ -26,7 +27,7 @@ from .lib import (
     context_settings=dict(
         ignore_unknown_options=True,
         allow_extra_args=True,
-    )
+    ),
 )
 @click.option("-w", "--widget", "widget_path", default=None)
 @click.option("-e", "--enum", "enum_path", default=None)
@@ -34,7 +35,11 @@ from .lib import (
 @click.option("-D", "--default", "default_behaviour", default=False, is_flag=True)
 @click.argument("addtional_options", nargs=-1, type=click.UNPROCESSED)
 def main(
-    widget_path: str | None, enum_path: str | None, raise_on_error: bool = False, default_behaviour: bool = False, addtional_options: List[str] | None = None,
+    widget_path: str | None,
+    enum_path: str | None,
+    raise_on_error: bool = False,
+    default_behaviour: bool = False,
+    addtional_options: List[str] | None = None,
 ) -> None:
     """
     A cli interface for executing a given QWidget from an entry point, or object returns a widget.
@@ -86,24 +91,24 @@ def main(
     enum = None if enum_path is None else resolve_enum(enum_path)
 
     plugin = load_function_entry_point() if not default_behaviour else None
-    
-    echo(f"Plugin: {plugin}" if plugin else "Default Behaviour", nl = False)
-    if addtional_options is not None: 
+
+    echo(f"Plugin: {plugin}" if plugin else "Default Behaviour", nl=False)
+    if addtional_options is not None:
         echo(f"Addtional options passsed - {addtional_options}")
         try:
             if isinstance(addtional_options, tuple):
                 options: Dict[str, str] = {}
-                
+
                 for i in addtional_options:
                     name, value = i.split("=")
-                    n = name.lstrip("--").replace("-", "_") 
+                    n = name.lstrip("--").replace("-", "_")
                     options[n] = value
 
                 echo(f"Converted options - {options}")
-            
+
         except:
             raise
-    
+
     if plugin is None or default_behaviour:
         if isinstance(options, dict):
             default(widget_path, entry, enum, **options)
@@ -118,10 +123,10 @@ def main(
         if isinstance(options, dict):
             plugin(entry, enum, **options)
             return
-        
+
         plugin(entry, enum, addtional_options)
         return
-        
+
     except:
         echo(f"Failed to run plugin - {plugin}")
         raise
@@ -138,13 +143,13 @@ def default(widget_path: str, entry: Callable[..., QWidget], enum: Enum | None, 
     try:
 
         widget: QWidget = entry(**kwargs) if enum is None else entry(enum)
-        
+
         if widget is None:
             echo(f"Returned value was None.")
             return
-        
+
         widget.show()
-    
+
     except:
         echo(f"Failed to run widget - {widget_path}")
         raise

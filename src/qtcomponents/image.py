@@ -1,12 +1,11 @@
 import logging
 
 import numpy as np
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QImage, QPixmap
-
 from pennyio.convert import convert_float_to_uint
 from pennyio.format import ImageFormat, determine_image_format
 from pennyio.types import BIT16, Image
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QImage, QPixmap
 
 from .file import FileFilter
 
@@ -19,7 +18,8 @@ IMAGE_FILE_FILTER = (
     FileFilter("TIFF Image", "tiff"),
     FileFilter("Nikon Raw Image", "NEF"),
     FileFilter("Canon Raw Image", "CR2"),
-    )
+)
+
 
 def image_to_pixmap(image: Image) -> QPixmap:
     """
@@ -107,5 +107,5 @@ def qimage_to_numpy(qimage: QImage) -> np.ndarray:
     height = qimage.height()
 
     ptr = qimage.constBits()
-    
+
     return np.array(ptr).reshape(height, width, 4)

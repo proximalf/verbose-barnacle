@@ -1,13 +1,13 @@
+import importlib
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Callable
 
-import importlib
-import sys
-
 from PySide6.QtWidgets import QApplication, QWidget
 
 ENTRY_POINT_NAME = "qtcomponents.execute"
+
 
 def load_function_entry_point() -> Callable | None:
     """

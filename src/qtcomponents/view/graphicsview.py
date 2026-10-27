@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 
-from PySide6.QtCore import QPointF, Qt, Signal, SignalInstance, QObject
+from PySide6.QtCore import QObject, QPointF, Qt, Signal, SignalInstance
 from PySide6.QtGui import (
     QCursor,
     QKeyEvent,
@@ -19,20 +19,21 @@ DRAG_MODE_DEFAULT = False  # Do not enable drag mode on initialisation
 MOUSE_TRACKING = True
 LOCK_MOUSE_TRACKING_TO_SCENE = True  # Setting this to false will break alot of stuff.
 
+
 class ImageViewerSignals(QObject):
-    key_pressed: SignalInstance = Signal(QKeyEvent) # ty: ignore[invalid-assignment]
+    key_pressed: SignalInstance = Signal(QKeyEvent)  # ty: ignore[invalid-assignment]
     zoom_changed: SignalInstance = Signal(float)  # ty: ignore[invalid-assignment]
 
     # Generic mouse event, to catch when a modifer is applied
-    mouse_event: SignalInstance = Signal(QMouseEvent) # ty: ignore[invalid-assignment]
-    mouse_position: SignalInstance = Signal(QPointF) # ty: ignore[invalid-assignment]
-    mouse_pressed: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
-    mouse_released: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
-    mouse_double_clicked: SignalInstance = Signal(QPointF, Qt.MouseButton) # ty: ignore[invalid-assignment]
-    
-    item_selected: SignalInstance = Signal(QGraphicsItem) # ty: ignore[invalid-assignment]
-    item_removed: SignalInstance = Signal(QGraphicsItem) # ty: ignore[invalid-assignment]
-    item_added_to_scene: SignalInstance = Signal() # ty: ignore[invalid-assignment]
+    mouse_event: SignalInstance = Signal(QMouseEvent)  # ty: ignore[invalid-assignment]
+    mouse_position: SignalInstance = Signal(QPointF)  # ty: ignore[invalid-assignment]
+    mouse_pressed: SignalInstance = Signal(QPointF, Qt.MouseButton)  # ty: ignore[invalid-assignment]
+    mouse_released: SignalInstance = Signal(QPointF, Qt.MouseButton)  # ty: ignore[invalid-assignment]
+    mouse_double_clicked: SignalInstance = Signal(QPointF, Qt.MouseButton)  # ty: ignore[invalid-assignment]
+
+    item_selected: SignalInstance = Signal(QGraphicsItem)  # ty: ignore[invalid-assignment]
+    item_removed: SignalInstance = Signal(QGraphicsItem)  # ty: ignore[invalid-assignment]
+    item_added_to_scene: SignalInstance = Signal()  # ty: ignore[invalid-assignment]
 
 
 class ImageViewer(QGraphicsView):
@@ -84,9 +85,9 @@ class ImageViewer(QGraphicsView):
         Emits `signal_zoom_changed` with value `1.0` when called.
         """
         self.fitInView(self.scene().sceneRect(), aspectRadioMode=Qt.AspectRatioMode.KeepAspectRatio)
-        # Not sure if this is the correct thing to do, 
+        # Not sure if this is the correct thing to do,
         # but if the zoom changes the correct value will emit.
-        self.signals.zoom_changed.emit(1.0) 
+        self.signals.zoom_changed.emit(1.0)
 
     def zoom(self, direction: int, rate: float = DELTA_SCALE) -> None:
         """
@@ -170,7 +171,7 @@ class ImageViewer(QGraphicsView):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if not self.reactive:
             return
-            
+
         self.signals.key_pressed.emit(event)
         return super().keyPressEvent(event)
 

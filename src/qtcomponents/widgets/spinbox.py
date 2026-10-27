@@ -2,15 +2,17 @@ from typing import Tuple
 
 from PySide6.QtCore import Qt, SignalInstance
 from PySide6.QtWidgets import (
+    QDoubleSpinBox,
     QHBoxLayout,
     QLabel,
     QSizePolicy,
     QSlider,
     QSpinBox,
-    QWidget, QDoubleSpinBox,
+    QWidget,
 )
 
 A = int | float
+
 
 class LabelledSpinbox[T: int | float](QWidget):
     """
@@ -30,7 +32,15 @@ class LabelledSpinbox[T: int | float](QWidget):
     spinbox: QSpinBox | QDoubleSpinBox
 
     def __init__(
-        self, label: str, min: A = 0, max: A = 100, step: A = 5, initial_value: A = 10, type: type = int, *args, **kwargs
+        self,
+        label: str,
+        min: A = 0,
+        max: A = 100,
+        step: A = 5,
+        initial_value: A = 10,
+        type: type = int,
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
         layout = QHBoxLayout()
@@ -43,14 +53,14 @@ class LabelledSpinbox[T: int | float](QWidget):
         layout.addWidget(self.label)
 
         self._type = type
-        
+
         if type is int:
-            self.spinbox = QSpinBox(self)            
+            self.spinbox = QSpinBox(self)
             self.spinbox.setMinimum(int(min))
             self.spinbox.setMaximum(int(max))
             self.spinbox.setValue(int(initial_value))
             self.spinbox.setSingleStep(int(step))
-        else: 
+        else:
             self.spinbox = QDoubleSpinBox(self)
             self.spinbox.setMinimum(min)
             self.spinbox.setMaximum(max)
@@ -78,7 +88,6 @@ class LabelledSpinbox[T: int | float](QWidget):
             self.spinbox.setValue(value)  # ty: ignore[invalid-argument-type]
 
 
-
 class SpinboxSlider(QWidget):
 
     slider: QSlider
@@ -87,7 +96,13 @@ class SpinboxSlider(QWidget):
     valueChanged: SignalInstance
 
     def __init__(
-        self, value: int = 0, label: str | None = None, range: Tuple[int, int] = (0, 100), suffix: str = "", *args, **kwargs
+        self,
+        value: int = 0,
+        label: str | None = None,
+        range: Tuple[int, int] = (0, 100),
+        suffix: str = "",
+        *args,
+        **kwargs,
     ) -> None:
         super().__init__(*args, **kwargs)
         low, high = range
