@@ -26,7 +26,7 @@ class DockTitleBar(QWidget):
         self.setObjectName("docktitle") # for qss styling
 
         layout = QHBoxLayout(self)
-        
+
         self.title = QLabel(dock.windowTitle())
 
         self.close_button = QToolButton()
@@ -44,6 +44,8 @@ class DockingManager:
     Basic Docking window manager.
 
     Holds reference to mainwindow, add widgets to window using this.
+
+    Docks are free to move as default, call lock_docks to disable movement.
     """
 
     active: MoveableWidget | None
@@ -53,6 +55,7 @@ class DockingManager:
         self.window = window
         self.widgets = {}       
         self.active = None
+        self.locked = False
 
         self.window.setDockNestingEnabled(True)
         self.window.setDockOptions(
@@ -129,6 +132,7 @@ class DockingManager:
         """
         Lock movement for dock widgets.
         """
+        self.locked = locked
         for widget in self.widgets.values():
             features = widget.dock.features()
 
