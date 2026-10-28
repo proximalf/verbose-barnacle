@@ -17,7 +17,7 @@ class Area(Enum):
     Bottom = Qt.DockWidgetArea.BottomDockWidgetArea
     Top = Qt.DockWidgetArea.TopDockWidgetArea
 
-class DockingManger:
+class DockingManager:
     """
     Basic Docking window manager.
 
@@ -68,14 +68,12 @@ class DockingManger:
         """
         
         if self.widgets.get(name) is not None:
-            dict_name = name + f"-{len(self.widgets)}"
-        else:
-            dict_name = name
+            raise ValueError("Can't add if name already exists")
 
         widget.setParent(self.window)
         widget.setObjectName(name)
 
-        dock_widget = QDockWidget(dict_name, self.window)
+        dock_widget = QDockWidget(name, self.window)
         dock_widget.setWidget(widget)
         dock_widget.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
         dock_widget.setFeatures(
@@ -89,9 +87,9 @@ class DockingManger:
             dock_widget
             )
         
-        mw = MoveableWidget(dict_name, widget, dock_widget)
+        mw = MoveableWidget(name, widget, dock_widget)
         
-        if tab and len(self.widgets) > 1:
+        if tab and len(self.widgets) >= 1:
             # Do tab onto itself.
             parent = parent or list(self.widgets.values())[0]
             self.window.tabifyDockWidget(parent.dock, dock_widget)
@@ -99,7 +97,7 @@ class DockingManger:
         if self.active is None:
             self.active = mw
 
-        self.widgets[dict_name] = mw
+        self.widgets[name] = mw
 
         return mw
 
