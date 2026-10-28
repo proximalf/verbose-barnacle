@@ -24,13 +24,13 @@ class DockingManger:
     Holds reference to mainwindow, add widgets to window using this.
     """
 
-    active_dock: str | None
+    active: MoveableWidget | None
     widgets: dict[str, MoveableWidget]
 
     def __init__(self, window: QMainWindow) -> None:
         self.window = window
         self.widgets = {}       
-        self.active_dock = None
+        self.active = None
 
         self.window.setDockNestingEnabled(True)
         self.window.setDockOptions(
@@ -52,10 +52,10 @@ class DockingManger:
         """Store the active dock widget"""
         for name, mw in self.widgets.items():
             if mw.dock == dock:
-                self.active_dock = name
+                self.active = mw
                 return
         
-        self.active_dock = None
+        self.active = None
     
     def has_widgets(self) -> bool:
         return len(self.widgets) > 0
@@ -89,17 +89,19 @@ class DockingManger:
             dock_widget
             )
         
-        self.widgets[dict_name] = MoveableWidget(dict_name, widget, dock_widget)
+        mw = MoveableWidget(dict_name, widget, dock_widget)
         
         if tab and len(self.widgets) > 1:
             # Do tab onto itself.
             parent = parent or list(self.widgets.values())[0]
             self.window.tabifyDockWidget(parent.dock, dock_widget)
         
-        if self.active_dock is None:
-            self.active_dock = dict_name
+        if self.active is None:
+            self.active = mw
 
-        return self.widgets[dict_name]
+        self.widgets[dict_name] = mw
+
+        return mw
 
     def lock_docking(self, locked: bool = True) -> None:
         """

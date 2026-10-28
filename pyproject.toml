@@ -1,6 +1,6 @@
 [project]
 name = "qtcomponents"
-version = "0.6.7"
+version = "0.6.8"
 description = "My common component lib, I hate qt designer and qml."
 readme = "README.md"
 requires-python = ">=3.12"
