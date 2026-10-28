@@ -22,17 +22,14 @@ def test_dock():
     app = QApplication(sys.argv)
     mw = QMainWindow()
     mw.setWindowTitle("test")
-
     
     dock_manager = DockingManger(mw)
 
-
     w = dock_manager.add_widget(QLabel("Main"), "main", Area.Left)
 
-
     dock_manager.add_widget(QLabel("Placeholder 1"), "place-1", Area.Bottom)
-    dock_manager.add_widget(QLabel("Placeholder 2"), "place-2")
-    dock_manager.add_widget(QLabel("Placeholder 3"), "place-3", tab=False)
+    dock_manager.add_widget(QLabel("Placeholder 2"), "place-3")
+    dock_manager.add_widget(QLabel("Placeholder 3"), "place", tab=False)
     a = dock_manager.add_widget(QLabel("Placeholder 4"), "place-4", tab=False)
     dock_manager.add_widget(QTextEdit("Placeholder Panel"), "place-4", parent=a)
 
