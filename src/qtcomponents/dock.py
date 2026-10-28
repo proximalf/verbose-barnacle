@@ -2,7 +2,7 @@ from enum import Enum
 from typing import NamedTuple
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel, QWidget, QMainWindow, QDockWidget, QTextEdit, QTabWidget
+from PySide6.QtWidgets import QLabel, QWidget, QMainWindow, QDockWidget, QTextEdit, QTabWidget, QToolButton, QHBoxLayout
 
 
 class MoveableWidget(NamedTuple):
@@ -16,6 +16,28 @@ class Area(Enum):
     Left = Qt.DockWidgetArea.LeftDockWidgetArea
     Bottom = Qt.DockWidgetArea.BottomDockWidgetArea
     Top = Qt.DockWidgetArea.TopDockWidgetArea
+
+
+class DockTitleBar(QWidget):
+
+    def __init__(self, dock: QDockWidget) -> None:
+        super().__init__(dock)
+        self.dock = dock
+        self.setObjectName("docktitle") # for qss styling
+
+        layout = QHBoxLayout(self)
+        
+        self.title = QLabel(dock.windowTitle())
+
+        self.close_button = QToolButton()
+        self.close_button.setText("×")
+        self.close_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        
+        self.close_button.clicked.connect(dock.close)
+
+        layout.addWidget(self.title)
+        layout.addStretch()
+        layout.addWidget(self.close_button)
 
 class DockingManager:
     """
@@ -81,6 +103,8 @@ class DockingManager:
             | QDockWidget.DockWidgetFeature.DockWidgetMovable
             # | QDockWidget.DockWidgetFeature.DockWidgetFloatable # Doesn't work so nicely
         )
+
+        dock_widget.setTitleBarWidget(DockTitleBar(dock_widget))
 
         self.window.addDockWidget(
             area.value,

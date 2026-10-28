@@ -10,7 +10,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit
 
-from qtcomponents.dock import DockingManger, Area
+from qtcomponents.dock import DockingManager, Area
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def test_dock():
     mw = QMainWindow()
     mw.setWindowTitle("test")
     
-    dock_manager = DockingManger(mw)
+    dock_manager = DockingManager(mw)
 
     w = dock_manager.add_widget(QLabel("Main"), "main", Area.Left)
 
